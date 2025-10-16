@@ -242,7 +242,11 @@ function _draw()
   for i, bala04 in ipairs(balas04)do
   Sprite(1,bala04.x, bala04.y)
   end
-  
+  local temporizador = 0 
+ if temporizador>50 then
+ Sprite(1,shot01.x, shot01.y)
+end
+temporizador= temporizador +1
 end
 ___tilemap___
 LK12;TILEMAP;144x128;

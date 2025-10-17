@@ -6,8 +6,8 @@ ___luacode___
  
 ---------------------------------------------------------------
   local game={
-   state = {
-    menu= true,
+   state= {
+    menu=true,
     running=false
     }
   }
@@ -40,8 +40,7 @@ shot02 = Disparo.new(sw/2,sh/2)
 shot03 = Disparo.new(sw/2, sh/2)
 shot04 = Disparo.new(sw/2, sh/2)
 
-cen01 = Disparo.new(shot01.x+30,
-shot01.y -30)
+muestra = Disparo.new(sw/2, sh/2)
 balas01= {}
 balas02 = {}
 balas03={}
@@ -83,70 +82,89 @@ nuevaBala04={
  y=shot04.y 
 }
 
-table.insert(balas04, nuevaBala04)
+table.insert(balas04,nuevaBala04)
 
 end
 
------------------------------------------------
+-------------------------------------------------------------
 function apuntar()
 n_bala()
 
-local bl1 = #balas01
- 
+for i = #balas01,1,-1 do 
+for i=#balas01,1,-1 do 
+ local bl1 = #balas01
+ local velocidad = 0.5
+
 local velocidad = 0.5
- for i=#balas01,1,-1 do
- for i=#balas01,1,-1 do 
-if bl1<150 then
  balas01[i].x = balas01[i].x +
  velocidad
  balas01[i].y = balas01[i].y-
  velocidad
+
+ if balas01[i].x<0 and
+ balas01[i].y<0 then
+ table.remove(balas01,i)
 end
+
 end
 end
 local bl2 = #balas02
-if bl2 <150 then
 for i=#balas02,1,-1 do 
 for i=#balas02,1,-1 do
  balas02[i].x = balas02[i].x -0.5
  balas02[i].y = balas02[i].y+0.5
 end
+if balas02[i].x<0 and
+balas02[i].y<0 then
+ table.remove(balas02,i)
 end
-local bl3 = #balas03
+end
 
-if bl3 < 150 then
- for i=#balas03,1,-1 do
- for i = #balas03,1,-1 do 
+local bl3 = #balas03
+for i=#balas03,1,-1 do
+for i=#balas03,1,-1 do 
+ 
  balas03[i].x = balas03[i].x -0.5
  balas03[i].y = balas03[i].y -0.5
+
  end
- end
+if  balas03[i].x>sw then
+ table.remove(balas03,i)
+end
 end
 
 local bl4 = #balas04
-if bl4 < 140 then
  for i= #balas04,1,-1 do
  for i= #balas04,1,-1 do
   balas04[i].x = balas04[i].x +0.5
   balas04[i].y= balas04[i].y +0.5
+
  end
- end
+if balas04[i].x<0 then
+ table.remove(balas04,i)
+end
 end
 
+
 end
-end
-
-----------------------------------------------
+-----------------------------------------------------------
 
 
-----------------------------------------------
+
+
+
+
+
+
+-----------------------------------------------------------
+
 function _init()
 
 
 end
 ---------------------------------------------------------------
-function buton_restart(func,buton_color,
- text_color, width, height)
+function buton_restart(func,
+buton_color, text_color, width,height)
   mx , my = getMPos()
  return {
   func = func or function() 
@@ -167,8 +185,10 @@ function buton_restart(func,buton_color,
   buton_y, text_x, text_y)
  
   self.text= text or self.text
-  self.buton_x = buton_x or self.buton_x
-  self.buton_y = buton_y or self.buton_y
+  self.buton_x = buton_x or
+  self.buton_x
+  self.buton_y = buton_y or
+  self.buton_y
 
    rect(self.buton_x, self.buton_y, 
   self.width, self.height)
@@ -180,15 +200,14 @@ function buton_restart(func,buton_color,
   (mx<=self.buton_x + self.width) then
   if(my>= self.buton_y)and
   (my<= self.buton_y + self.height)then
+
     self.func()
-    
    end
   end
   end
 
  }
 end
-
 ---------------------------------------------------------
  buttons.restart.restart_01=
  buton_restart(apuntar,
@@ -200,16 +219,27 @@ end
 ----------------------------------------------
 function _update60()
 
+
+end
+
+function _update()
+ if #balas01>150 then
+ muestra.y= muestra.y+1
+ end
+
 end
 
 function _mousepressed()
-mx,my = getMPos()
-buttons.restart.restart_01:checkPressed(mx,my)
+
+ buttons.restart.restart_01
+ :checkPressed(mx,my)
 
 end
 
 function _mousereleased()
-
+ mx,my = getMPos()
+table.remove(balas01,x)
+table.remove(balas01,y)
 end
 -----------------------------------------------------
 
@@ -222,31 +252,33 @@ function _draw()
   "Restart",sw/12,sh-12,10,10)
   color(7)
   print("Restart",sw/12+2,sh-10)
-  buttons.restart.restart_01:
-  checkPressed(mx,my)
-   
 
+ buttons.restart
+ .restart_01:checkPressed(mx,my)
+ 
+ for i,bala01 in ipairs(balas01)do
+    Sprite(1,bala01.x, bala01.y)  
+   end
 
-  for i,bala01 in ipairs(balas01)do
-   Sprite(1,bala01.x,bala01.y)
-  end
-  
-  for i, bala02 in ipairs(balas02)do
+ for i, bala02 in ipairs(balas02)do
    Sprite(1,bala02.x, bala02.y)
   end
   
-  for i, bala03 in ipairs(balas03)do
+ for i, bala03 in ipairs(balas03)do
    Sprite(1,bala03.x, bala03.y)
   end
   
-  for i, bala04 in ipairs(balas04)do
+ for i, bala04 in ipairs(balas04)do
   Sprite(1,bala04.x, bala04.y)
   end
-  local temporizador = 0 
- if temporizador>50 then
- Sprite(1,shot01.x, shot01.y)
+
+
+
+if #balas01>150 then
+Sprite(2,muestra.x, muestra.y)
 end
-temporizador= temporizador +1
+
+
 end
 ___tilemap___
 LK12;TILEMAP;144x128;

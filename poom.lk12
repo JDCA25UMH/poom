@@ -89,13 +89,15 @@ end
 -------------------------------------------------------------
 function apuntar()
 n_bala()
+local bl = #balas01
+local bl= math.min(bl,150)
 
-for i = #balas01,1,-1 do 
-for i=#balas01,1,-1 do 
- local bl1 = #balas01
+for i =bl,1,-1 do 
+
+for i=bl,1,-1 do 
+
  local velocidad = 0.5
 
-local velocidad = 0.5
  balas01[i].x = balas01[i].x +
  velocidad
  balas01[i].y = balas01[i].y-
@@ -107,10 +109,15 @@ local velocidad = 0.5
 end
 
 end
+
 end
+
+
+
 local bl2 = #balas02
-for i=#balas02,1,-1 do 
-for i=#balas02,1,-1 do
+local bl2 = math.min(bl2,150)
+for i=bl2,1,-1 do 
+for i=bl2,1,-1 do
  balas02[i].x = balas02[i].x -0.5
  balas02[i].y = balas02[i].y+0.5
 end
@@ -121,8 +128,9 @@ end
 end
 
 local bl3 = #balas03
-for i=#balas03,1,-1 do
-for i=#balas03,1,-1 do 
+local bl3= math.min(bl3,150)
+for i=bl3,1,-1 do
+for i=bl3,1,-1 do 
  
  balas03[i].x = balas03[i].x -0.5
  balas03[i].y = balas03[i].y -0.5
@@ -134,8 +142,9 @@ end
 end
 
 local bl4 = #balas04
- for i= #balas04,1,-1 do
- for i= #balas04,1,-1 do
+local bl4 = math.min(bl4,150)
+ for i=bl4 ,1,-1 do
+ for i=bl4,1,-1 do
   balas04[i].x = balas04[i].x +0.5
   balas04[i].y= balas04[i].y +0.5
 
@@ -225,9 +234,10 @@ end
 function _update()
  if #balas01>150 then
  muestra.y= muestra.y+1
+ 
  end
-
 end
+
 
 function _mousepressed()
 
@@ -238,8 +248,7 @@ end
 
 function _mousereleased()
  mx,my = getMPos()
-table.remove(balas01,x)
-table.remove(balas01,y)
+
 end
 -----------------------------------------------------
 
@@ -252,33 +261,47 @@ function _draw()
   "Restart",sw/12,sh-12,10,10)
   color(7)
   print("Restart",sw/12+2,sh-10)
-
+ 
  buttons.restart
  .restart_01:checkPressed(mx,my)
- 
- for i,bala01 in ipairs(balas01)do
-    Sprite(1,bala01.x, bala01.y)  
-   end
 
+
+local bl = #balas01
+local bl_2 = #balas02
+local bl_3 = #balas03
+local bl_4 = #balas04
+if bl<149 then
+ for i,bala01 in ipairs(balas01)do
+    Sprite(1,bala01.x, bala01.y) 
+   
+   end
+  end
+if bl_2<149 then 
  for i, bala02 in ipairs(balas02)do
    Sprite(1,bala02.x, bala02.y)
   end
+  end
   
+  if bl_3<149 then 
  for i, bala03 in ipairs(balas03)do
    Sprite(1,bala03.x, bala03.y)
   end
+  end
   
+  if bl_4<149 then
  for i, bala04 in ipairs(balas04)do
   Sprite(1,bala04.x, bala04.y)
   end
+end
 
-
-
-if #balas01>150 then
+local bl = #balas01
+local bl= math.min(bl,150)
+if bl>=150 then
 Sprite(2,muestra.x, muestra.y)
 end
 
-
+color(7)
+print(bl,1,1)
 end
 ___tilemap___
 LK12;TILEMAP;144x128;

@@ -367,7 +367,6 @@ buttons.clean.clean_01:draw(
 color(7)
 print("Clean",sw/2+7,sh-10)
 
-print(bl,1,10)
 end
 ___tilemap___
 LK12;TILEMAP;144x128;

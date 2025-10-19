@@ -19,7 +19,8 @@ ___luacode___
      blue=0.6
      },
    
-  restart={}
+  restart={},
+  clean={}
   }
 --------------------------------------------
 
@@ -41,14 +42,14 @@ shot03 = Disparo.new(sw/2, sh/2)
 shot04 = Disparo.new(sw/2, sh/2)
 
 muestra = Disparo.new(sw/2, sh/2)
-balas01= {}
-balas02 = {}
-balas03={}
-balas04 = {}
+ balas01= {}
+ balas02 = {}
+ balas03={}
+ balas04 = {}
 
 function n_bala()
 
-nuevaBala= {}
+ nuevaBala= {}
 
 nuevaBala={
  x= shot01.x,
@@ -56,7 +57,7 @@ nuevaBala={
 }
 
 table.insert(balas01, nuevaBala)
-nuevaBala02={}
+ nuevaBala02={}
 
 nuevaBala02 = {
  x= shot02.x,
@@ -66,7 +67,7 @@ nuevaBala02 = {
 
 table.insert(balas02, nuevaBala02)
 
-nuevaBala03 = {}
+ nuevaBala03 = {}
 
 nuevaBala03= {
  x= shot03.x,
@@ -75,7 +76,7 @@ nuevaBala03= {
 }
 table.insert(balas03, nuevaBala03)
 
-nuevaBala04= {}
+ nuevaBala04= {}
 
 nuevaBala04={
  x=shot04.x,
@@ -107,12 +108,8 @@ for i=bl,1,-1 do
  balas01[i].y<0 then
  table.remove(balas01,i)
 end
-
 end
-
 end
-
-
 
 local bl2 = #balas02
 local bl2 = math.min(bl2,150)
@@ -156,17 +153,7 @@ end
 
 
 end
------------------------------------------------------------
-
-
-
-
-
-
-
-
------------------------------------------------------------
-
+--------------------------------------------------------------
 function _init()
 
 
@@ -217,91 +204,170 @@ buton_color, text_color, width,height)
 
  }
 end
----------------------------------------------------------
+---------------------------------------------------------------
  buttons.restart.restart_01=
- buton_restart(apuntar,
+ buton_restart(apuntar ,
  {r=buttons.colors["red"],
  g=buttons.colors["green"],
  b= buttons.colors["blue"]},
  {r=0,g=0,b=0},40,10 ) 
 
-----------------------------------------------
+------------------------------------------------------------
+function buton_clean(func,buton_color,
+text_color, width, height)
+ mx,my = getMPos() 
+
+return{
+ func= func or function()
+ print("no func",1,1)end,
+ text_color= text_color or {r=0,g=0,b=0},
+ buton_color= buton_color or {r=1,g=1,b=1},
+ width = width or 100,
+ height= height or 100,
+ text = "No Text",
+ buton_x = 0, 
+ buton_y = 0,
+ text_x =0,
+ text_y = 0,
+ 
+draw = function(self, text, buton_x,
+buton_y, text_x, text_y) 
+ self.text = text
+  or self.text
+ self.buton_x = buton_x
+  or self.buton_x
+ self.buton_y = buton_y
+  or self.buton_y
+
+rect(self.buton_x, self.buton_y,
+self.width, self.height) 
+end,
+
+checkPressed= function (self,mx,my)
+
+if(mx>=self.buton_x)and
+ (mx<=self.buton_x + self.width)then
+if(my>=self.buton_y)and
+ (my<=self.buton_y +self.height) then
+ self.func()
+
+end
+end
+end
+}
+end
+------------------------------------------------------------------------------------------------------
+function vacio()
+
+balas01={}
+balas02={}
+balas03={}
+balas04={}
+muestra.y=sh/2
+
+end
+---------------------------------------------------------------
+buttons.clean.clean_01= buton_clean(
+vacio,{r=buttons.colors["red"],
+g= buttons.colors["green"],
+b= buttons.colors["blue"]},
+{r=0,g=0,b=0},40,10)
+
+-------------------------------------------------
+
 function _update60()
 
 
 end
-
+ 
 function _update()
  if #balas01>150 then
  muestra.y= muestra.y+1
  
  end
+ 
+  
 end
-
 
 function _mousepressed()
 
  buttons.restart.restart_01
  :checkPressed(mx,my)
 
+buttons.clean.clean_01
+:checkPressed(mx,my)
+
+
+ 
 end
 
 function _mousereleased()
  mx,my = getMPos()
 
+ buttons.restart.restart_01
+ :checkPressed(mx,my)
+
 end
+
 -----------------------------------------------------
 
 function _draw()
 
   sw,sh = screenSize()
   clear()
-  color(5)
-  buttons.restart.restart_01:draw(
-  "Restart",sw/12,sh-12,10,10)
-  color(7)
-  print("Restart",sw/12+2,sh-10)
- 
- buttons.restart
- .restart_01:checkPressed(mx,my)
+ buttons.restart.restart_01
+ :checkPressed(mx,my)
 
+ buttons.clean.clean_01
+ :checkPressed(mx,my)
 
-local bl = #balas01
-local bl_2 = #balas02
-local bl_3 = #balas03
-local bl_4 = #balas04
+ local bl = #balas01
+ local bl_2 = #balas02
+ local bl_3 = #balas03
+ local bl_4 = #balas04
+
+ local function dibujarBalas(balas)
+  for i,bala in ipairs(balas)do
+   Sprite(1,bala.x, bala.y)
+  end
+ end
+
 if bl<149 then
- for i,bala01 in ipairs(balas01)do
-    Sprite(1,bala01.x, bala01.y) 
-   
-   end
-  end
+ dibujarBalas(balas01)
+end
 if bl_2<149 then 
- for i, bala02 in ipairs(balas02)do
-   Sprite(1,bala02.x, bala02.y)
-  end
-  end
+ dibujarBalas(balas02)
+end
   
-  if bl_3<149 then 
- for i, bala03 in ipairs(balas03)do
-   Sprite(1,bala03.x, bala03.y)
-  end
-  end
+if bl_3<149 then 
+  dibujarBalas(balas03)
+ end
   
-  if bl_4<149 then
- for i, bala04 in ipairs(balas04)do
-  Sprite(1,bala04.x, bala04.y)
-  end
+if bl_4<149 then
+ dibujarBalas(balas04)
 end
 
-local bl = #balas01
-local bl= math.min(bl,150)
-if bl>=150 then
-Sprite(2,muestra.x, muestra.y)
-end
 
+ local bl = #balas01
+ local bl= math.min(bl,150)
+ if bl==150 then
+ Sprite(2,muestra.x, muestra.y)
+ 
+ end
+ 
+color(5)
+buttons.restart.restart_01:draw("Restart",
+sw/12,sh-12,10,10)
 color(7)
-print(bl,1,1)
+print("Restart",sw/12+2,sh-10)
+
+color(5)
+buttons.clean.clean_01:draw(
+"Clean",sw/2,sh-12,10,10)
+color(7)
+print("Clean",sw/2+7,sh-10)
+
+print(bl,1,10)
 end
 ___tilemap___
 LK12;TILEMAP;144x128;
